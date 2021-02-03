@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>To-do list</title>
+</head>
+<body>
+    <header></header>
+    <div class="container">
+        <ul id="menu">
+            <li class="active">View All</li>
+            <li>Todo Project</li>
+            <li>House Renovations</li>
+            <li>Supermarket</li>
+            <li>PC</li>
+        </ul>
+        <div class="table">
+            <div class="todo-header">
+                <div class="priority">▼</div>
+                <div class="name">Task</div>
+                <div class="due">Due date</div>
+                <div class="status"></div>
+            </div>
+            <div id="todo">
+                <div class="todo-item">
+                    <div class="priority">🔥</div>
+                    <div class="name">SOMETHING WENT WRONG</div>
+                    <div class="due">1991-10-15</div>
+                    <div class="status"><input type="checkbox" name="task status" id="task1"></div>
+                </div>
+            </div>
+            <form id="newItemForm" class="edit-item hidden">
+            </form>
+            <button id="newItem">✚ Add</button>
+            <button id="closeItem" class="hidden">🗙 Close</button>
+        </div>
+    </div>
+    <div id="undo" class="hidden poof">
+        <span><a class="link" onclick="undo();">Undo</a> last action</span><a class="right close" onclick="animateHideUndo();">✖</a>
+    </div>
+    <script src="scripts/constructor.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/sidebar.js"></script>
+</body>
+</html>
