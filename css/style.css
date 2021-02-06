@@ -119,15 +119,27 @@ textarea {
 MENU
 */
 
-#menu {
+.sidebar {
   font-size: 1.4em;
   line-height: 2em;
   color: #2e5da5;
+  padding-left: 30px;
+  margin-top: 30px;
 }
 
-.active {
-  list-style-type: "⬥";
-  font-weight: bold;
+.sidebar div {
+  display: inline-block;
+  cursor: pointer;
+}
+
+#menu {
+  padding: 0;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+}
+
+#menu li span {
+  cursor: pointer;
 }
 
 /*
@@ -200,6 +212,12 @@ input[type="date"] {
 
 .btn-delete:hover {
   color: #ff6e6e;
+}
+
+#header-name,
+#header-due,
+#header-priority {
+  cursor: pointer;
 }
 
 /*

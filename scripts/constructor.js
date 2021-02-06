@@ -1,8 +1,8 @@
 let taskID = 0;
 let tasks = [];
-let activeTasks = [];
 let backupID = 0;
 let backup = "";
+let currentGroup = "";
 
 function Task(name, description, due, group, priority, id){
     this.name = name;
@@ -85,7 +85,7 @@ function Task(name, description, due, group, priority, id){
             DOMcheckbox.checked = false;
             DOMtodoItem.classList.remove("done");
         }
-        render();
+        render(currentGroup);
     })
 
     const FORMtodo = document.createElement('form');
@@ -100,7 +100,7 @@ function Task(name, description, due, group, priority, id){
     const FORMcancelItem = document.createElement('button');
 
     this.edit = function(){
-        render();
+        render(currentGroup);
         DOMtodoItem.innerHTML = "";
         FORMtodo.classList.add("edit-item");
 
@@ -169,23 +169,23 @@ function Task(name, description, due, group, priority, id){
         this.description = FORMdesc.value;
         this.due = FORMdate.value;
         this.priority = FORMcheckbox.checked;
-        render();
+        render(currentGroup);
     }
 
     FORMsaveItem.addEventListener('click', () => {this.update()});
 
     this.cancel = function(){
-        render();
+        render(currentGroup);
     }
 
     FORMcancelItem.addEventListener('click', () => {this.cancel()});
 
     this.delete = function(){
-        animateDisplayUndo()
-        backupID = this.id;
-        backup = tasks[this.id];
-        tasks[this.id] = null;
-        animate(DOMtodoItem, "poof", 0.5, render, true);
+        animateDisplayUndo();
+        let IDposition = tasks.findIndex((element) => element.id === this.id);
+        backup = tasks[IDposition];
+        tasks.splice(IDposition, 1);
+        animate(DOMtodoItem, "poof", 0.5, render, true, currentGroup);
     }
 
     DOMdelete.addEventListener('click', () => {this.delete()});

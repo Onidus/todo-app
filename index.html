@@ -10,27 +10,19 @@
 <body>
     <header></header>
     <div class="container">
-        <ul id="menu">
-            <li class="active">View All</li>
-            <li>Todo Project</li>
-            <li>House Renovations</li>
-            <li>Supermarket</li>
-            <li>PC</li>
-        </ul>
+        <div class="sidebar">
+            <div onclick="showGroup('')">View All</div>
+            <ul id="menu">
+            </ul>
+        </div>
         <div class="table">
             <div class="todo-header">
-                <div class="priority">▼</div>
-                <div class="name">Task</div>
-                <div class="due">Due date</div>
+                <div class="priority grey" id="header-priority">🔥</div>
+                <div class="name" id="header-name">All tasks</div>
+                <div class="due" id="header-due">Due date</div>
                 <div class="status"></div>
             </div>
             <div id="todo">
-                <div class="todo-item">
-                    <div class="priority">🔥</div>
-                    <div class="name">SOMETHING WENT WRONG</div>
-                    <div class="due">1991-10-15</div>
-                    <div class="status"><input type="checkbox" name="task status" id="task1"></div>
-                </div>
             </div>
             <form id="newItemForm" class="edit-item hidden">
             </form>
@@ -43,6 +35,5 @@
     </div>
     <script src="scripts/constructor.js"></script>
     <script src="scripts/script.js"></script>
-    <script src="scripts/sidebar.js"></script>
 </body>
 </html>

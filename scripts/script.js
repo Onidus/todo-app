@@ -1,6 +1,5 @@
 const todo = document.getElementById("todo");
 
-
 const newItemForm = document.getElementById("newItemForm");
 
 const NEWpriority = document.createElement('label');
@@ -53,6 +52,7 @@ function createForm(){
     NEWgroup.classList.add("todo-group");
     NEWgroup.name = "group"
     NEWgroup.placeholder = "Group";
+    NEWgroup.value = currentGroup;
     newItemForm.appendChild(NEWgroup);
 
     NEWbuttonsDiv.classList.add("buttons");
@@ -118,7 +118,7 @@ function submitForm(){
 function addTask(name, description, due, group, priority){
     tasks.push(new Task(name, description, due, group, priority, taskID));
     taskID++;
-    render();
+    render(currentGroup);
 }
 
 const undoWindow = document.getElementById("undo");
@@ -132,37 +132,28 @@ function hideUndo(){
 
 function undo(){
     animateHideUndo();
-    tasks[backupID] = backup;
-    render();
-}
-
-function populateActiveTasks(){
-    activeTasks = [];
-    for(let i = 0; i < tasks.length; i++){
-        if(tasks[i] instanceof Task){
-            activeTasks.push(tasks[i]);
-        }
-    }
+    tasks.push(backup);
+    render(currentGroup);
 }
 
 function render(group){
     todo.innerHTML = "";
-    populateActiveTasks();
-    for(let i = 0; i < activeTasks.length; i++){
-        if(group == null || activeTasks[i].group == group){
-            activeTasks[i].print();
+    renderMenu();
+    for(let i = 0; i < tasks.length; i++){
+        if(group == "" || tasks[i].group == group){
+            tasks[i].print();
         }
     }
 }
 
-function animate(element, animationClass, seconds, action, isHide){
+function animate(element, animationClass, seconds, action, isHide, actionAttribute){ //actionAttribute needs to be passed since calling a function as an attribute breaks the code
     element = (typeof element === "string") ? document.querySelector(element) : element;
     let milliseconds = seconds * 1000;
     if(isHide){
         element.classList.add(animationClass);
-        setTimeout(action, milliseconds);
+        setTimeout(function() {action(actionAttribute)}, milliseconds);
     }else{
-        action();
+        action(actionAttribute);
         setTimeout(() => {element.classList.remove(animationClass)}, 1);
     }
 }
@@ -175,10 +166,134 @@ function animateHideUndo(){
     animate("#undo", "poof", 0.5, hideUndo, true);
 }
 
+const menu = document.getElementById("menu");
+menu.innerHTML = "";
+const menuAll = document.createElement("li");
+menuAll.innerHTML = "Show All";
+menu.appendChild(menuAll);
 
-addTask("Eat burgers", "Yummy", "1995-05-03", "Food", false);
-addTask("Eat fries", "Crunchy", "1998-06-23", "Food", true);
-addTask("Drink soda", "Yummy", "2005-02-14", "Drink", false);
-addTask("Wash dishes", "Oh no...", "2021-03-07", "Cleaning", false);
+let groupObj = {};
 
-render();
+function sortObj(obj) {
+    return Object.keys(obj).sort().reduce(function (result, key) {
+      result[key] = obj[key];
+      return result;
+    }, {});
+}
+
+function populateMenu(){
+    groupObj = {};
+    tasks.forEach((item) => {
+        if(groupObj[item.group]){
+            groupObj[item.group]++
+        }else{
+            groupObj[item.group] = 1;
+        }
+    });
+    groupObj = sortObj(groupObj);
+}
+
+function renderMenu(){
+    menu.innerHTML = "";
+    populateMenu();
+    for(const key in groupObj){
+        let menuItem = document.createElement("li");
+        menuItem.innerHTML = "<span onclick=showGroup('"+key+"')>" + key + " (" + groupObj[key] + ")</span>"; //showGroup() gets called as a string on onclick
+        menu.appendChild(menuItem);
+    }
+}
+
+function showGroup(key){
+    currentGroup = key;
+    if(key == ''){
+        headerName.innerHTML = "All tasks";
+    }else{
+        headerName.innerHTML = key;
+    }
+    sortByID(1);
+}
+
+function sortByName(reverse){ //for reverse enter 1 or -1
+    tasks = tasks.sort((a, b) => {
+        let stringA = a.name.toUpperCase();
+        let stringB = b.name.toUpperCase();
+        if(stringA < stringB){
+            return -1 * reverse;
+        }
+        else if(stringA > stringB){
+            return 1 * reverse;
+        }
+        return 0;
+    });
+    render(currentGroup);
+}
+
+function sortByID(reverse){
+    tasks = tasks.sort((a, b) => (a.id - b.id) * reverse);
+    render(currentGroup);
+}
+
+function sortByDate(reverse){
+    tasks = tasks.sort((a, b) => {
+        let stringA = a.due;
+        let stringB = b.due;
+        if(stringA < stringB){
+            return -1 * reverse;
+        }
+        else if(stringA > stringB){
+            return 1 * reverse;
+        }
+        return 0;
+    });
+    render(currentGroup);
+}
+
+function sortByUrgent(){
+    tasks = tasks.sort((a, b) => {
+        if(a.priority < b.priority){
+            return 1;
+        }
+        else if(a.priority > b.priority){
+            return -1;
+        }
+        return 0;
+    });
+    render(currentGroup);
+}
+
+const headerName = document.getElementById("header-name");
+let headerNameSelected = 1;
+headerName.addEventListener("click", () => {
+    sortByName(headerNameSelected);
+    headerNameSelected *= -1;
+    headerDueSelected = 1;
+});
+
+const headerDue = document.getElementById("header-due");
+let headerDueSelected = 1;
+headerDue.addEventListener("click", () => {
+    sortByDate(headerDueSelected);
+    headerDueSelected *= -1;
+    headerNameSelected = 1;
+})
+
+const headerPriority = document.getElementById("header-priority");
+headerPriority.addEventListener("click", () => {
+    sortByUrgent();
+    headerSelectionClear()
+})
+
+function headerSelectionClear(){
+    headerNameSelected = 1;
+    headerDueSelected = 1;
+}
+
+addTask("Prepare Valentine's dinner", "Calzone and cake", "2021-02-14", "Events", true);
+addTask("Interview @ 11am", "ABC Company", "2021-02-11", "Work", false);
+addTask("Buy paperclips", "Regular size, 100un. box", "2021-02-16", "Work", false);
+addTask("Buy tickets for the movie", "Titanic @ 10pm", "2021-02-22", "Events", false);
+addTask("Groceries", "Tomato, potato, minced meat", "2021-02-10", "Food", true);
+addTask("Do nothing", "For the whole day", "2021-02-13", "Events", false);
+
+
+render(currentGroup);
