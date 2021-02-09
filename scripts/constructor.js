@@ -4,11 +4,11 @@ let backupID = 0;
 let backup = "";
 let currentGroup = "";
 
-function Task(name, description, due, group, priority, id){
+function Task(name, description, due, group, priority, status, id){
     this.name = name;
     this.description = description;
     this.due = due;
-    this.status = false;
+    this.status = status;
     this.group = group;
     this.priority = priority;
     this.id = id;
@@ -72,7 +72,10 @@ function Task(name, description, due, group, priority, id){
         DOMstatus.appendChild(DOMdelete);
         todo.appendChild(DOMtodoItem);
     }
-    
+    if(this.status){
+        DOMcheckbox.checked = true;
+        DOMtodoItem.classList.add("done");
+    }
     DOMcheckbox.addEventListener('click', () => {
         if(DOMcheckbox.checked){
             console.log("checked");

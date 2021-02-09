@@ -115,8 +115,8 @@ function submitForm(){
     NEWpriority.classList.add("grey");
 }
 
-function addTask(name, description, due, group, priority){
-    tasks.push(new Task(name, description, due, group, priority, taskID));
+function addTask(name, description, due, group, priority, status){
+    tasks.push(new Task(name, description, due, group, priority, status, taskID));
     taskID++;
     render(currentGroup);
 }
@@ -137,6 +137,7 @@ function undo(){
 }
 
 function render(group){
+    saveToStorage();
     todo.innerHTML = "";
     renderMenu();
     for(let i = 0; i < tasks.length; i++){
@@ -288,12 +289,33 @@ function headerSelectionClear(){
     headerDueSelected = 1;
 }
 
-addTask("Prepare Valentine's dinner", "Calzone and cake", "2021-02-14", "Events", true);
-addTask("Interview @ 11am", "ABC Company", "2021-02-11", "Work", false);
-addTask("Buy paperclips", "Regular size, 100un. box", "2021-02-16", "Work", false);
-addTask("Buy tickets for the movie", "Titanic @ 10pm", "2021-02-22", "Events", false);
-addTask("Groceries", "Tomato, potato, minced meat", "2021-02-10", "Food", true);
-addTask("Do nothing", "For the whole day", "2021-02-13", "Events", false);
+let tasksParse = []
+
+function saveToStorage(){
+    localStorage.setItem("items", JSON.stringify(tasks));
+    localStorage.setItem("taskID", taskID);
+}
+
+function getFromStorage(){
+    taskID = localStorage.getItem("taskID");
+    tasksParse = JSON.parse(localStorage.getItem("items"));
+    tasks = [];
+    for (let i = 0; i < tasksParse.length; i++){
+        tasks.push(new Task (tasksParse[i].name, tasksParse[i].description, tasksParse[i].due, tasksParse[i].group, tasksParse[i].priority, tasksParse[i].status, tasksParse[i].id));
+    }
+    render('');
+}
 
 
-render(currentGroup);
+if(localStorage.items){
+    console.log("taken from localStorage");
+    getFromStorage();
+}else{
+    console.log("created");
+    addTask("Prepare Valentine's dinner", "Calzone and cake", "2021-02-14", "Events", false, true);
+    addTask("Interview @ 11am", "ABC Company", "2021-02-11", "Work", false, false);
+    addTask("Buy paperclips", "Regular size, 100un. box", "2021-02-16", "Work", true, false);
+    addTask("Buy tickets for the movie", "Titanic @ 10pm", "2021-02-22", "Events", false, false);
+    addTask("Groceries", "Tomato, potato, minced meat", "2021-02-10", "Food", true, true);
+    addTask("Do nothing", "For the whole day", "2021-02-13", "Events", false, false);
+}
