@@ -20,11 +20,6 @@ NEWpriority.addEventListener('click', () => {
     }
 });
 
-NEWcancelItem.addEventListener('click', () => {
-    newItemForm.reset();
-    NEWpriority.classList.add("grey");
-});
-
 function createForm(){
     NEWpriority.classList.add("urgency-icon");
     NEWpriority.innerHTML = "🔥"
@@ -60,12 +55,8 @@ function createForm(){
     NEWsaveItem.type = "button";
     NEWsaveItem.innerHTML = "Save";
 
-    NEWcancelItem.type = "button";
-    NEWcancelItem.innerHTML = "Cancel";
-
     newItemForm.appendChild(NEWbuttonsDiv);
     NEWbuttonsDiv.appendChild(NEWsaveItem);
-    NEWbuttonsDiv.appendChild(NEWcancelItem);
 }
 
 const newItem = document.getElementById("newItem");
@@ -308,14 +299,14 @@ function getFromStorage(){
 
 
 if(localStorage.items){
-    console.log("taken from localStorage");
     getFromStorage();
-}else{
-    console.log("created");
-    addTask("Prepare Valentine's dinner", "Calzone and cake", "2021-02-14", "Events", false, true);
-    addTask("Interview @ 11am", "ABC Company", "2021-02-11", "Work", false, false);
-    addTask("Buy paperclips", "Regular size, 100un. box", "2021-02-16", "Work", true, false);
-    addTask("Buy tickets for the movie", "Titanic @ 10pm", "2021-02-22", "Events", false, false);
-    addTask("Groceries", "Tomato, potato, minced meat", "2021-02-10", "Food", true, true);
-    addTask("Do nothing", "For the whole day", "2021-02-13", "Events", false, false);
+}else{ //Generate an initial demonstration
+    addTask("Demonstration", "Description", "2021-02-14", "Demo", false, false);
+    addTask("You can check your finished tasks by clicking on the checkbox", "This will strike-through the box", "2021-02-21", "Tutorial", false, true);
+    addTask("Important items can be marked with a fire icon 🔥", "You can filter important items by clicking on the grey 🔥 at the top of the table", "2021-02-12", "Tutorial", true, false);
+    addTask("Clicking on the Edit icon (✎) allows you to edit an item and show details", "This is the Details box", "2021-02-13", "Tutorial", false, false);
+    addTask("Clicking on the Delete icon (✖) removes the item. You can undo the last removed item", "The undo box is shown at the top of the screen when deleting something. Be careful, only the last item can be deleted", "2021-02-14", "Tutorial", false, false);
+    addTask("You can sort items by priority, name or due date by clicking on the respective area at the table's header", "", "2021-02-15", "Tutorial", false, false);
+    addTask("Groups can be created and filtered", "The number of items is displayed besides each group on the sidebar menu", "2021-02-16", "Tutorial", false, false);
+    addTask("Please delete all items to use the application", "All information will be saved on your localStorage inbetween sessions", "2021-02-17", "Tutorial", true, false);
 }
